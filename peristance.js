@@ -4,6 +4,7 @@ const bigs    = ["7", "8", "9"],
         value       : 0,
         persistance : 0,
     },
+    hasZero   = (value) => value === "0",
     combine   = (values, length = 1) => {
         let data    = Array(length),
             results = [],
@@ -27,13 +28,13 @@ const bigs    = ["7", "8", "9"],
         if (value.length === 1) {
             persistance--;
             return {value: start, persistance};
-        } else if (value[0] === 0) {
+        } else if (value.some(hasZero)) {
             persistance++;
             return {value: start, persistance};
         }
         let next = 1;
         value.map((digit) => next *= parseInt(digit));
-        return calculate(start, next.toString().split("").sort(), persistance);
+        return calculate(start, next.toString().split(""), persistance);
     },
     loop      = (start = { value : 0, persistance : 0 }) => {
         if (!global.gc) {
@@ -55,7 +56,6 @@ const bigs    = ["7", "8", "9"],
                 if (result.persistance > finding.persistance) {
                     Object.assign(finding, result);
                     console.log("\nFound ->", result, "\n");
-                    break;
                 } else {
                     result = undefined;
                 }
