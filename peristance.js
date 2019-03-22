@@ -5,6 +5,7 @@ const bigs    = ["7", "8", "9"],
         persistance : 0,
     },
     hasZero   = (value) => value === "0",
+    hasFive   = (value) => value === "5",
     combine   = (values, length = 1) => {
         let data    = Array(length),
             results = [],
@@ -30,6 +31,8 @@ const bigs    = ["7", "8", "9"],
             return {value: start, persistance};
         } else if (value.some(hasZero)) {
             persistance++;
+            return {value: start, persistance};
+        } else if (value.some(hasFive) && (persistance + 1) < finding.persistance) {
             return {value: start, persistance};
         }
         let next = 1;
