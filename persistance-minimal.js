@@ -20,7 +20,6 @@ const bigs    = ["7", "8", "9"],
             smalls.map((small) => {
                 let result = calculate(small + data, small + data, 0);
                 if (result.persistance > finding.persistance) {
-                    result.value = parseInt(result.value);
                     Object.assign(finding, result);
                     console.log("\nFound ->", result);
                 }
