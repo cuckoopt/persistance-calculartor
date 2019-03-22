@@ -7,7 +7,7 @@ const bigs    = ["7", "8", "9"],
     calculate = (start, value, persistance) => {
         if (value.length === 1) {
             return {value: start, persistance};
-        } else if (value.includes("0") || (value.includes("5") && (value.includes("2") || value.includes("4") || value.includes("6") || value.includes("8")))) {
+        } else if (value.includes("0")) {
             return {value: start, persistance : persistance + 2};
         }
         persistance++;

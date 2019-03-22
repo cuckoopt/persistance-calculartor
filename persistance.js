@@ -6,8 +6,6 @@ const bigs         = ["7", "8", "9"],
         persistance : 0,
     },
     isZero         = (value) => value === "0",
-    isFive         = (value) => value === "5",
-    isEven         = (value) => (parseInt(value) % 2) === 0,
     combine        = (values, length = 1) => {
         let data    = Array(length),
             results = [],
@@ -33,7 +31,7 @@ const bigs         = ["7", "8", "9"],
     calculate = (start, value = start, persistance = 0) => {
         if (value.length === 1) {
             return {value: start, persistance};
-        } else if (value.some(isZero) || (value.some(isFive) && value.some(isEven))) {
+        } else if (value.some(isZero)) {
             persistance += 2;
             return {value: start, persistance};
         }
