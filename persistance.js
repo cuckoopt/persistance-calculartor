@@ -32,7 +32,7 @@ const bigs         = ["7", "8", "9"],
         if (value.length === 1) {
             return {value: start, persistance};
         } else if (value.some(isZero)) {
-            persistance += 2;
+            persistance += 1;
             return {value: start, persistance};
         }
         persistance++;
@@ -52,7 +52,7 @@ const bigs         = ["7", "8", "9"],
 
         while (true) {
             global.gc();
-            console.log("\tAt size ->", size);
+            console.log("\tAt size ->", size + 1);
             let source = combine(bigs, size);
 
             for (let value of smalls.map((small) => source.map((combination) => small + combination)).flat()) {
