@@ -4,14 +4,20 @@ const bigs    = ["7", "8", "9"],
         value       : 0,
         persistance : 0,
     },
-    hasZero   = (value) => value === "0",
-    hasFive   = (value) => value === "5",
+    cache     = {},
+    isZero    = (value) => value === "0",
+    isFive    = (value) => value === "5",
+    isEven    = (value) => (parseInt(value) % 2) === 0,
     combine   = (values, length = 1) => {
         let data    = Array(length),
             results = [],
             build   = (index) => {
                 if(index === length) {
-                    results.push(data.slice());
+                    let newValue = data.slice().sort();
+                    if (!results.some((value) => newValue.join("") === value.join(""))) {
+                        results.push(newValue);
+                    }
+                    newValue = undefined;
                     return;
                 }
                 for(let value of values) {
@@ -25,19 +31,23 @@ const bigs    = ["7", "8", "9"],
         return results;
     },
     calculate = (start, value = start, persistance = 0) => {
-        persistance++;
-        if (value.length === 1) {
-            persistance--;
+        if (value.join("") in cache) {
+            return {value: start, persistance : cache[value.join("")] + persistance};
+        } else if (value.length === 1) {
+            cache[start.join("")] = persistance;
             return {value: start, persistance};
-        } else if (value.some(hasZero)) {
-            persistance++;
-            return {value: start, persistance};
-        } else if (value.some(hasFive) && (persistance + 1) < finding.persistance) {
+        } else if (value.some(isZero) || (value.some(isFive) && value.some(isEven))) {
+            persistance += 2;
+            cache[start.join("")] = persistance;
             return {value: start, persistance};
         }
-        let next = 1;
-        value.map((digit) => next *= parseInt(digit));
-        return calculate(start, next.toString().split(""), persistance);
+        persistance++;
+        let result = 1;
+        value.map((digit) => result *= parseInt(digit));
+        let next       = result.toString().split("").sort(),
+            calculated = calculate(start, next, persistance);
+        cache[next.join("")] = calculated.persistance - persistance;
+        return calculated;
     },
     loop      = (start = { value : 0, persistance : 0 }) => {
         if (!global.gc) {
@@ -69,6 +79,10 @@ const bigs    = ["7", "8", "9"],
     };
 
 loop();
+
+process.on("sigint", () => {
+    console.log(cache)
+})
 
 module.exports = loop;
 module.exports.calculate = calculate;
